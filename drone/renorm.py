@@ -11,9 +11,7 @@ from time import sleep
 # - file: output label path after detection
 # - csv_path: path to save csv file
 def renorm(output_label,csv_path,sp = ','):
-    print(output_label)
     name = output_label.split("\\")[-1].split(sp)[0]
-    print(name)
     id = []
     x1 = []
     y1 = []
@@ -30,7 +28,7 @@ def renorm(output_label,csv_path,sp = ','):
             w1.append(float(s[3]))
             h1.append(float(s[4]))
             conf.append(float(s[5]))
-    f2=open(csv_path + name + ".csv",'w+')
+    f2=open(csv_path +'\\'+ name + ".csv",'w+')
     for a in range(len(id)):
         w = int(w1[a] * 640)
         h = int(h1[a] * 640)
@@ -78,13 +76,14 @@ def re_label(csv_file,original_img_path,img_type='.png'):
     # file name
     name = csv_file.split('\\')[-1].split('.')[0]
     label = name[:3]
+    # print(name[3:])
     # file path
     path = csv_file.split(name)[0]
 
     # read label data
     id,x,y,w,h,conf = read_label(csv_file)
     # get image size
-    height, width = image_size(original_img_path + name[3:] + img_type)
+    height, width = image_size(original_img_path +'//'+ name[3:] + img_type)
 
     # open file and write
     crop1 = open(path +  name + '.csv', 'w+')
@@ -174,7 +173,7 @@ def combine_labels(csv_label,final):
     name = img_name[3:]
     label = img_name[:3]
     # write new file with same name
-    f2=open(final + name + ".csv",'a+')
+    f2=open(final +'\\'+ name + ".csv",'a+')
     with open(csv_label) as f:
         for line in f.readlines():
             new = line.strip('\n')
@@ -188,7 +187,7 @@ def combine_labels(csv_label,final):
 # - origin_img_path: path to origin image
 # - csv_path: path to csv file after renormalize
 # - final: path to final output
-def main(output_label_path,origin_img_path,csv_path,final):
+def main():
     label_path = glob.glob(output_label_path + '\\*.txt')
 
     # renormalize labels
@@ -208,11 +207,11 @@ def main(output_label_path,origin_img_path,csv_path,final):
         sleep(0.001)
 
 output_label_path = r'nopeoplemachine\output_label_path'
-origin_img_path = r'nopeoplemachine\train\\'
-
-csv_path = r'nopeoplemachine\detect_123\\'
-final = r'nopeoplemachine\no_nms\\'
-main(output_label_path,origin_img_path,csv_path,final)
+origin_img_path = r'nopeoplemachine\train_offical'
+csv_path = r'nopeoplemachine\detect_123'
+final = r'nopeoplemachine\no_nms'
+if __name__ == "__main__":
+    main()
 
 
 

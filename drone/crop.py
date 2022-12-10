@@ -23,7 +23,7 @@ def crop_image(file,crop_path,size=640):
         y2 = [0]
 
     # get image name
-    img_name = file.split('/')[-1]
+    img_name = file.split('\\')[-1]
 
     # read image
     img = cv2.imread(file)
@@ -56,7 +56,8 @@ def read_label(file,sp = ','):
     w = []
     h = []
     conf = []
-    with open(file, 'r') as f:
+    
+    with open(file,'r') as f:
         lines = f.readlines()
         for line in lines:
             line = line.strip('\n')
@@ -66,8 +67,9 @@ def read_label(file,sp = ','):
             y.append(int(s[2]))
             w.append(int(s[3]))
             h.append(int(s[4]))
-            conf.append(float(s[5]))
-    return id,x,y,w,h,conf
+            # conf.append(float(s[5]))
+    
+    return id,x,y,w,h
 
 # get image size
 # - file: original image path
@@ -81,14 +83,13 @@ def image_size(file,img_type='.png'):
 # - file: original label path
 def crop_label(file,crop_label_path,img_type='.png',size = 640):
     # file name
-    name = file.split('/')[-1].split('.')[0]
-
-    # create crop path
-    path = os.path.dirname(os.path.normpath(file)).split('/')[-1] # get original label path
-    path = file.split(str(path))[0] + 'crop/' # create crop path under original label path
-
+    name = file.split('\\')[-1].split('.')[0]
+    file_path = file.split(name)[0]
+    file_path = file_path + name + ".txt"
+    # crop path
+    path = crop_label_path
     # read label data
-    id,x,y,w,h,conf = read_label(file)
+    id,x,y,w,h = read_label(file_path)
     
     # get image size
     height, width = image_size(file,img_type)
@@ -121,46 +122,46 @@ def crop_label(file,crop_label_path,img_type='.png',size = 640):
     # crop label
     if height == 1080 and width == 1920:
         for i in range(len(id)):
-            if y[i] < 590:
-                if x[i] < 590:
-                    crop1.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+            if y[i] < 640:
+                if x[i] < 640:
+                    crop1.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 370 <= x[i] < 1010:
-                    crop2.write(str(id[i]) + ' ' + str(x[i]-x1[0]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop2.write(str(id[i]) + ' ' + str(x[i]-x1[0]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + '\n')
                 if 910 <= x[i] < 1550:
-                    crop3.write(str(id[i]) + ' ' + str(x[i]-x1[1]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop3.write(str(id[i]) + ' ' + str(x[i]-x1[1]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + '\n')
                 if size == 640:
                     if 1280 <= x[i] < 1920:
-                        crop4.write(str(id[i]) + ' ' + str(x[i]-x1[2]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                        crop4.write(str(id[i]) + ' ' + str(x[i]-x1[2]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                     
             if y[i] >= 440:
                 if x[i] < 640:
-                    crop5.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop5.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 370 <= x[i] < 1010:
-                    crop6.write(str(id[i]) + ' ' + str(x[i]-x1[0]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop6.write(str(id[i]) + ' ' + str(x[i]-x1[0]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 910 <= x[i] < 1550:
-                    crop7.write(str(id[i]) + ' ' + str(x[i]-x1[1]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop7.write(str(id[i]) + ' ' + str(x[i]-x1[1]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if size == 640:
                     if 1280 <= x[i] < 1920:
-                        crop8.write(str(id[i]) + ' ' + str(x[i]-x1[2]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                        crop8.write(str(id[i]) + ' ' + str(x[i]-x1[2]) + ' ' + str(y[i]-y1[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
 
     elif height == 720 and width == 1344:
         for i in range(len(id)):
             if y[i] < 640:
                 if x[i] < 640:
-                    crop1.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop1.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 352 <= x[i] < 992:
-                    crop2.write(str(id[i]) + ' ' + str(x[i]-x2[0]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop2.write(str(id[i]) + ' ' + str(x[i]-x2[0]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 704 <= x[i] < 1344:
-                    crop3.write(str(id[i]) + ' ' + str(x[i]-x2[1]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop3.write(str(id[i]) + ' ' + str(x[i]-x2[1]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 
                 
             if y[i] >= 80:
                 if x[i] < 640:
-                    crop5.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop5.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 352 <= x[i] < 992:
-                    crop6.write(str(id[i]) + ' ' + str(x[i]-x2[0]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop6.write(str(id[i]) + ' ' + str(x[i]-x2[0]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                 if 704 <= x[i] < 1344:
-                    crop7.write(str(id[i]) + ' ' + str(x[i]-x2[1]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i]) + ',' + str(conf[i]) + '\n')
+                    crop7.write(str(id[i]) + ' ' + str(x[i]-x2[1]) + ' ' + str(y[i]-y2[0]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
     
     crop8.close()
     crop7.close()
@@ -225,27 +226,22 @@ def normalize_label(cropped_label,img_type = '.png'):
 # - original_img_path: path to images
 # - crop_img_path: path to save cropped images
 # - crop_label_path: path to save cropped labels
-def main(original_img_path,crop_img_path,crop_label_path,img_type = '.png'):
+def main(img_type = '.png'):
     # crop image
-    files = glob.glob(original_img_path + '/*' + img_type)
+    files = glob.glob(original_img_path + '\\*' + img_type)
     for file in tqdm(files,desc='Cropping image'):
         crop_image(file,crop_img_path,size=640)
         sleep(0.001)
-
+    
 
     # crop label
     for file in tqdm(files,desc='Cropping label'):
         crop_label(file,crop_label_path,img_type='.png',size=640)
         sleep(0.001)
-
     # remove empty label file with corresponding image
-    cropped_label = glob.glob(crop_label_path + '/*' + '.txt') 
-    cropped_image = glob.glob(crop_img_path + '/*' + img_type) 
-    try:
-        for i in trange(len(cropped_label),desc='Removing empty label'):
-            remove_empty(cropped_label[i],cropped_image[i])
-    except FileNotFoundError:
-        print('File not found: ' + cropped_label[i] + ' or ' + cropped_image[i])
+    cropped_label = glob.glob(crop_label_path + '\\*' + '.txt') 
+    cropped_image = glob.glob(crop_img_path + '\\*' + img_type) 
+
     
     # Delete box outside of image
     for i in trange(len(cropped_label),desc='Deleting box outside of image'):
@@ -254,8 +250,17 @@ def main(original_img_path,crop_img_path,crop_label_path,img_type = '.png'):
     # Normalize label
     for i in trange(len(cropped_label),desc='Normalizing label'):
         normalize_label(cropped_label[i],img_type = '.png')
-
-    return
-
     
+    try:
+        for i in trange(len(cropped_label),desc='Removing empty label'):
+            remove_empty(cropped_label[i],cropped_image[i])
+    except FileNotFoundError:
+        print('File not found: ' + cropped_label[i] + ' or ' + cropped_image[i])
 
+
+original_img_path = r'nopeoplemachine\train_offical'
+crop_img_path = r'nopeoplemachine\crop\\'
+crop_label_path = r'nopeoplemachine\crop\\'
+
+if __name__ == "__main__":
+    main()
