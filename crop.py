@@ -79,7 +79,7 @@ def image_size(file,img_type='.png'):
 
 # crop label
 # - file: original label path
-def crop_label(file,img_type='.png',size = 640):
+def crop_label(file,crop_label_path,img_type='.png',size = 640):
     # file name
     name = file.split('/')[-1].split('.')[0]
 
@@ -256,5 +256,6 @@ def main(original_img_path,crop_img_path,crop_label_path,img_type = '.png'):
         normalize_label(cropped_label[i],img_type = '.png')
 
     return
+
     
 
