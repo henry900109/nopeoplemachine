@@ -52,7 +52,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True, GIoU=False, DIoU=False, CIoU=False, eps=
             return iou - (c_area - union) / c_area  # GIoU
     else:
         return iou  # IoU
-def countIOU(text,Fname,mergepath2):
+def countIOU(text,Fname):
     del_index = []                                                                                                                   # correcting the index that need to remove
     same = []                                                                                                                   # correcting the distance that need to remove (it's doesn't used)
     for i in range(len(text)):
@@ -60,9 +60,9 @@ def countIOU(text,Fname,mergepath2):
             if (i != j) and (text["IDcode"][i] != text["IDcode"][j]) and (text["id"][i] == text["id"][j]): 
                 box1 =torch.tensor([text["x"][i],text["y"][i],text["x"][i]+text["w"][i],text["y"][i]+text["h"][i]])
                 box2 =torch.tensor([text["x"][j],text["y"][j],text["x"][j]+text["w"][j],text["y"][j]+text["h"][j]])                 # Comparing the IDcode , id is the same or not and let i not equal to j
-                print(box1)
-                print("..........................")
-                print(box2)
+                # print(box1)
+                # print("..........................")
+                # print(box2)
                 iou = bbox_iou(box1,box2)
                 if iou >= 0.5:  
                     iou = iou.item()                                                                                                     # if IOU <= 0.5 ,del
@@ -102,22 +102,23 @@ def countIOU(text,Fname,mergepath2):
     same = sorted(list(set(same)))                    
     del_index = sorted(list(set(del_index)))
     text.drop(text.index[del_index],axis = 0,inplace = True)
-    text.to_csv(mergepath2 + "\\" + Fname ,index = 0)                                                                             # del the index
+    text.to_csv(model640path + "\\" + Fname ,index = 0)                                                                             # del the index
     return del_index,same                                                                                                                 # return index which has been del            
 
-def put_1500csv(model1088path2 = model1088path ,mergepath2 = mergepath):
-    Cpath = model1088path2 # first file path
+def put_1500csv():
+    Cpath = r'nopeoplemachine\no_nms' # first file path
     Clist = glob(Cpath + "\\*.csv")         # all first file path csv
     CHlist = ["id","x","y","w","h","conf","IDcode"]
     count = 0
     tcount = 0
+    print(Clist)
     for i in range(len(Clist)):
         Ctext = pd.read_csv(Clist[i], header=0, names=CHlist)
         Fname = Clist[i].split("\\")[-1]
         text = Ctext
         text = text.reset_index(drop=True)                                  # reset the index
         cf = Fname.split(".")[0]  
-        d,s = countIOU(text,Fname,mergepath2)   
+        d,s = countIOU(text,Fname)   
         a = len(d)-len(s)   
         if a<0:
             break         
@@ -143,59 +144,59 @@ def merge():
     f2.close()
 
 
-
-def main():
-    put_1500csv()
-    merge()
-
-
-if __name__ == "__main__":
-    main()
+put_1500csv()
+# def main():
+#     put_1500csv()
+#     merge()
 
 
+# if __name__ == "__main__":
+#     main()
 
-def final_nms():
-    Cpath = r"E:\nopeople_machine\nms\best" # first file path
-    Fpath = r"E:\nopeople_machine\nms\car_hov"  # Second file path
-    Flist = glob(Fpath + "\\*.csv")  
-    Clist = glob(Cpath + "\\*.csv")         # all first file path csv
-    CHlist = ["id","x","y","w","h","conf","IDcode"]
-    FHlist = ["id","x","y","w","h","conf","IDcode"]
-    count = 0
-    tcount = 0
-    for i in range(len(Clist)):
-        Cname = Clist[i].split("\\")[-1]
-        Fpath = r"E:\nopeople_machine\nms\car_hov"
-        Fpath = Fpath + "\\" + Cname
-        dellist = []
+
+
+# def final_nms():
+#     Cpath = r"E:\nopeople_machine\nms\best" # first file path
+#     Fpath = r"E:\nopeople_machine\nms\car_hov"  # Second file path
+#     Flist = glob(Fpath + "\\*.csv")  
+#     Clist = glob(Cpath + "\\*.csv")         # all first file path csv
+#     CHlist = ["id","x","y","w","h","conf","IDcode"]
+#     FHlist = ["id","x","y","w","h","conf","IDcode"]
+#     count = 0
+#     tcount = 0
+#     for i in range(len(Clist)):
+#         Cname = Clist[i].split("\\")[-1]
+#         Fpath = r"E:\nopeople_machine\nms\car_hov"
+#         Fpath = Fpath + "\\" + Cname
+#         dellist = []
         
-        try:
-            Ftext = pd.read_csv(Fpath, header=0, names=FHlist)
+#         try:
+#             Ftext = pd.read_csv(Fpath, header=0, names=FHlist)
             
-            for j in range(len(Ftext["id"])):
-                Ftext["IDcode"][j] = Ftext["IDcode"][j] + "F"
+#             for j in range(len(Ftext["id"])):
+#                 Ftext["IDcode"][j] = Ftext["IDcode"][j] + "F"
 
-                if  (int(Ftext["id"][j]) == 2) or (int(Ftext["id"][j]) ==  3):
-                    dellist.append(j)
-            Ftext.drop(Ftext.index[dellist],axis = 0,inplace = True)
+#                 if  (int(Ftext["id"][j]) == 2) or (int(Ftext["id"][j]) ==  3):
+#                     dellist.append(j)
+#             Ftext.drop(Ftext.index[dellist],axis = 0,inplace = True)
             
-            Ctext = pd.read_csv(Clist[i], header=0, names=CHlist)
-            text = pd.concat([Ftext,Ctext],axis=0)
-        except:
-            Ctext = pd.read_csv(Clist[i], header=0, names=CHlist)
-            text = Ctext
-            print("except: " + Cname)
-        text = text.reset_index(drop=True)                                  # reset the index
-        cf = Cname.split(".")[0]  
-        d,s = countIOU(text,Cname)   
-        a = len(d)-len(s)   
-        if a<0:
-            break         
-        count += a
-        tcount += len(d)                           # for instance : name = img1001
-        print(cf)
-        print(d)
-        #print(a)                                      # Use the function countIOU(text,Fname) or count(text,Fname) 
-        print("---------------------------------------------------------------------------------")
-    print("del total: " + str(tcount))
-    print("del diffient: " + str(count))
+#             Ctext = pd.read_csv(Clist[i], header=0, names=CHlist)
+#             text = pd.concat([Ftext,Ctext],axis=0)
+#         except:
+#             Ctext = pd.read_csv(Clist[i], header=0, names=CHlist)
+#             text = Ctext
+#             print("except: " + Cname)
+#         text = text.reset_index(drop=True)                                  # reset the index
+#         cf = Cname.split(".")[0]  
+#         d,s = countIOU(text,Cname)   
+#         a = len(d)-len(s)   
+#         if a<0:
+#             break         
+#         count += a
+#         tcount += len(d)                           # for instance : name = img1001
+#         print(cf)
+#         print(d)
+#         #print(a)                                      # Use the function countIOU(text,Fname) or count(text,Fname) 
+#         print("---------------------------------------------------------------------------------")
+#     print("del total: " + str(tcount))
+#     print("del diffient: " + str(count))
