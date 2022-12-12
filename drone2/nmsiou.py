@@ -4,7 +4,6 @@ import math
 import torch
 
 mergepath = r"nopeoplemachine\nms\merge"
-model640path = r"nopeoplemachine\nms\model640"
 resultpath = r"nopeoplemachine\nms\result.csv"
 
 def bbox_iou(box1, box2, x1y1x2y2=True, GIoU=False, DIoU=False, CIoU=False, eps=1e-7):
@@ -142,21 +141,9 @@ def merge():
 
     f2.close()
 
-
-# put_1500csv()
-def main():
-    # put_1500csv()
-    merge()
-
-
-if __name__ == "__main__":
-    main()
-
-
-
 def final_nms():
-    Cpath = r"E:\nopeople_machine\nms\best" # first file path
-    Fpath = r"E:\nopeople_machine\nms\car_hov"  # Second file path
+    Cpath = r"nopeoplemachine\nms\model640" # first file path
+    Fpath = r"nopeoplemachine\nms\model1088"  # Second file path
     Flist = glob(Fpath + "\\*.csv")  
     Clist = glob(Cpath + "\\*.csv")         # all first file path csv
     CHlist = ["id","x","y","w","h","conf","IDcode"]
@@ -165,7 +152,6 @@ def final_nms():
     tcount = 0
     for i in range(len(Clist)):
         Cname = Clist[i].split("\\")[-1]
-        Fpath = r"E:\nopeople_machine\nms\car_hov"
         Fpath = Fpath + "\\" + Cname
         dellist = []
         
@@ -199,3 +185,16 @@ def final_nms():
         print("---------------------------------------------------------------------------------")
     print("del total: " + str(tcount))
     print("del diffient: " + str(count))
+
+# put_1500csv()
+def main():
+    # put_1500csv()
+    merge()
+
+
+if __name__ == "__main__":
+    put_1500csv()
+    main()
+
+
+

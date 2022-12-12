@@ -7,7 +7,6 @@ from tqdm import tqdm
 from time import sleep
 import drone2.nmsiou as dn
 
-
 # renormalize label data
 # - file: output label path after detection
 # - csv_path: path to save csv file
@@ -19,7 +18,6 @@ def renorm(output_label,csv_path,sp = ','):
     w1 = []
     h1 = []
     conf = []
-
     with open(output_label) as f:
         for line in f.readlines():
             s = line.split(' ')
@@ -30,7 +28,7 @@ def renorm(output_label,csv_path,sp = ','):
             h1.append(float(s[4]))
             conf.append(float(s[5]))
     
-    f2=open(csv_path +'\\'+ name + ".csv",'w+')
+    f2=open(csv_path +'\\'+ name + ".csv",'w+') #crop的已經renomalize的label
     for a in range(len(id)):
         w = int(w1[a] * 640)
         h = int(h1[a] * 640)
@@ -39,6 +37,7 @@ def renorm(output_label,csv_path,sp = ','):
 
         f2.write(str(id[a])+","+str(x)+","+str(y)+","+str(w)+","+str(h)+","+str(conf[a])+'\n')
     f2.close()
+    
 
 # read label data
 # - file: output label path after detection
@@ -74,18 +73,17 @@ def image_size(file,img_type='.png'):
 # crop label
 # - csv_file: label path after renormalization
 # - original_img_path: original image path
-def re_label(csv_file,original_img_path,img_type='.png'):
+def re_label(csv_file,origin_img_path,img_type='.png'):
     # file name
     name = csv_file.split('\\')[-1].split('.')[0]
     label = name[:3]
     # print(name[3:])
     # file path
     path = csv_file.split(name)[0]
-
     # read label data
     id,x,y,w,h,conf = read_label(csv_file)
     # get image size
-    height, width = image_size(original_img_path +'//'+ name[3:] + img_type)
+    height, width = image_size(origin_img_path +'//'+ name[3:] + img_type)
 
     # open file and write
     crop1 = open(path +  name + '.csv', 'w+')
@@ -189,10 +187,9 @@ def nms():
 # - output_label_path: path to output label
 # - origin_img_path: path to origin image
 # - csv_path: path to csv file after renormalize
-# - final: path to final output
+# - no_nms: path to no_nms output
 def main():
     label_path = glob.glob(output_label_path + '\\*.txt')
-
     # renormalize labels
     for file in tqdm(label_path,desc='Renormalize detection labels'):
         renorm(file,csv_path)
@@ -210,9 +207,9 @@ def main():
         sleep(0.001)
     nms()
 
-output_label_path = r'nopeoplemachine\output_label_path'
+output_label_path = r'nopeoplemachine\output_label_path\img640'
 origin_img_path = r'nopeoplemachine\train_offical'
-csv_path = r'nopeoplemachine\csv'
+csv_path = r'nopeoplemachine\csv\img640'
 no_nms = r'nopeoplemachine\no_nms\img640'
 if __name__ == "__main__":
     main()
