@@ -184,7 +184,7 @@ def combine_labels(csv_label,no_nms):
     return
 
 def nms():
-    dn.put_1500csv(model640path = no_nms,mergepath = r"nopeoplemachine\nms\model640")
+    dn.put_1500csv(modelpath = no_nms,mergepath = r"nopeoplemachine\nms\model640")
 # main
 # - output_label_path: path to output label
 # - origin_img_path: path to origin image
