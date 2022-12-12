@@ -5,7 +5,7 @@ import pandas as pd
 import glob
 from tqdm import tqdm
 from time import sleep
-import nmsiou as dn
+import drone2.nmsiou as dn
 
 
 # renormalize label data
@@ -169,13 +169,13 @@ def re_label(csv_file,original_img_path,img_type='.png'):
 # combine labels
 # - csv_label: path to csv label
 # - final: path to final output
-def combine_labels(csv_label,final):
+def combine_labels(csv_label,no_nms):
     img_name = csv_label.split("\\")[-1].split(".")[0]
     # img_name = img_name.split(".")[0]
     name = img_name[3:]
     label = img_name[:3]
     # write new file with same name
-    f2=open(final +'\\'+ name + ".csv",'a+')
+    f2=open(no_nms +'\\'+ name + ".csv",'a+')
     with open(csv_label) as f:
         for line in f.readlines():
             new = line.strip('\n')
@@ -184,7 +184,7 @@ def combine_labels(csv_label,final):
     return
 
 def nms():
-    dn.put_1500csv(model1088path2 = final,mergepath2 = r"nopeoplemachine\nms\model640")
+    dn.put_1500csv(model640path = no_nms,mergepath = r"nopeoplemachine\nms\model640")
 # main
 # - output_label_path: path to output label
 # - origin_img_path: path to origin image
@@ -206,14 +206,14 @@ def main():
 
     # combine labels
     for file in tqdm(csv_label,desc='Combine detection labels'):
-        combine_labels(file,final)
+        combine_labels(file,no_nms)
         sleep(0.001)
     nms()
 
 output_label_path = r'nopeoplemachine\output_label_path'
 origin_img_path = r'nopeoplemachine\train_offical'
 csv_path = r'nopeoplemachine\csv'
-final = r'nopeoplemachine\no_nms'
+no_nms = r'nopeoplemachine\no_nms\img640'
 if __name__ == "__main__":
     main()
 

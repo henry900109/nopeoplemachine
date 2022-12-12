@@ -1,0 +1,6 @@
+train: nopeoplemachine\machine\train640.txt
+val: nopeoplemachine\machine\val640.txt
+
+nc: 4
+
+names: [ 'car','hov','people','motor' ]

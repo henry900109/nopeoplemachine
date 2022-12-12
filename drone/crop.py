@@ -138,7 +138,6 @@ def crop_label(file,crop_label_path,size,img_type='.png'):
             for i in range(len(id)):
                 if y[i] < 640:
                     if x[i] < 640:
-                        print('oooooooooooooooooooooooooooooooooooo')
                         crop1.write(str(id[i]) + ' ' + str(x[i]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i])  + '\n')
                     if 370 <= x[i] < 1010:
                         crop2.write(str(id[i]) + ' ' + str(x[i]-x1[0]) + ' ' + str(y[i]) + ' ' + str(w[i]) + ' ' + str(h[i]) + '\n')
