@@ -104,7 +104,7 @@ def countIOU(text,Fname,mergepath):
     text.to_csv(mergepath + "\\" + Fname ,index = 0)                                                                             # del the index
     return del_index,same                                                                                                                 # return index which has been del            
 
-def put_1500csv(modelpath):
+def put_1500csv(modelpath,mergepath):
     Cpath = modelpath # first file path
     Clist = glob(Cpath + "\\*.csv")         # all first file path csv
     CHlist = ["id","x","y","w","h","conf","IDcode"]
@@ -117,7 +117,7 @@ def put_1500csv(modelpath):
         text = Ctext
         text = text.reset_index(drop=True)                                  # reset the index
         cf = Fname.split(".")[0]  
-        d,s = countIOU(text,Fname)   
+        d,s = countIOU(text,Fname,mergepath)   
         a = len(d)-len(s)   
         if a<0:
             break         
