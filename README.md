@@ -9,3 +9,11 @@
 ## 協助:
 - Henry-Cho,
   email:henry2.900109@gmail.com
+
+## Hints：
+- 請將要訓練的圖片&label都放置於train_officilal下，需多放一份train的照片（沒有txt)在 crop/new_img1088
+- public& private 資料請置於public下
+- 依序執行main.ipynb
+- 結果儲存於result
+- 如果需要自行修改訓練時檔案（train.txt val.txt) 可使用 drone/croptrainandval.py 
+  此程式以640圖檔舉例
