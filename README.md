@@ -1,8 +1,11 @@
 # 無人機飛行載具之智慧計數
 
 ## 安裝配置環境:
-- 暫定colab
-- 可能有其他的
+- Windows 10
+- VScode-python 3.8.5
+- need gpu at least 8g
+- storage at least 60gb
 
-## 重要模塊:
-- debug用，暫不填
+## 協助:
+- Henry-Cho,
+  email:henry2.900109@gmail.com
